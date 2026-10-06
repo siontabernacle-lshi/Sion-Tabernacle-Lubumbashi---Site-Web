@@ -496,7 +496,7 @@ body.locked{overflow:hidden}
 /* ---- Héros : vidéo d'introduction en arrière-plan ---- */
 .hero{position:relative;isolation:isolate;overflow:hidden;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-block:120px 40px}
 .hero .stage{position:absolute;inset:0;z-index:-1;margin:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0}
-.hero .stage::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 0%,transparent 40%),rgba(0,0,0,.68)}
+.hero .stage::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--bg) 0%,transparent 40%),linear-gradient(180deg,var(--bg) 0%,transparent 40%),rgba(0,0,0,.68)}
 .hero>.wrap,.hero .buy{position:relative;z-index:1}
 :root[data-theme=light] .hero .brand{background:linear-gradient(95deg,var(--g1),var(--g2) 30%,var(--g3) 65%,var(--g4))}
 .hero .btn.ghost{color:#fff;border-color:rgba(255,255,255,.7)}
