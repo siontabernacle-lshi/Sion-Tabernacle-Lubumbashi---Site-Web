@@ -595,6 +595,17 @@ body.locked{overflow:hidden}
     </div>
   </section>
 
+  <!-- Découvrir le Journal -->
+  <section class="sec wrap" id="decouvrir-journal"><style>#decouvrir-journal .jd-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:28px 0}#decouvrir-journal .jd-c{display:block;padding:18px;border:1px solid color-mix(in srgb,currentColor 15%,transparent);border-radius:14px;text-decoration:none;color:inherit;transition:transform .2s,border-color .2s}#decouvrir-journal .jd-c:hover{transform:translateY(-3px);border-color:var(--g2)}#decouvrir-journal .jd-c small{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.1em;opacity:.6;margin-bottom:6px}#decouvrir-journal .jd-c span{font-weight:600;font-size:17px}</style>
+    <div class="rv">
+      <p class="kick">Édition spéciale — 1 an de réveil</p>
+      <h2 class="sec-h">Découvrir le <span class="gt">Journal de Sion.</span></h2>
+      <p>L'histoire de l'église, le réveil et ceux qui servent : parcourez chaque rubrique du Journal.</p>
+      <div class="jd-g"><a class="jd-c" href="#journal" data-open="journal" data-to="j-fondation"><small>Histoire</small><span>La fondation</span></a><a class="jd-c" href="#journal" data-open="journal" data-to="j-reveil"><small>Réveil</small><span>Le Réveil de Sion</span></a></div>
+      <a class="btn" href="#journal" data-open="journal" data-to="j-fondation">Ouvrir le Journal</a>
+    </div>
+  </section>
+
   <!-- Événements -->
   <section class="sec hl" id="evenements">
     <div class="wrap sec-head">
@@ -686,7 +697,7 @@ body.locked{overflow:hidden}
       <h1>Le Journal de Sion</h1>
       <div class="meta"><span>Lubumbashi · RD Congo</span><span>Édition spéciale — 1 an de réveil</span><span>1er octobre 2026</span></div>
     </header>
-    <nav class="jtoc"><a href="#j-fondation" data-to="j-fondation">La fondation</a><a href="#j-reveil" data-to="j-reveil">Le Réveil de Sion</a><a href="#j-admin" data-to="j-admin">Les administrateurs</a><a href="#j-diacres" data-to="j-diacres">Les diacres</a><a href="#j-huissiers" data-to="j-huissiers">Les huissiers</a><a href="#j-tech" data-to="j-tech">L'équipe technique</a><a href="#j-musique" data-to="j-musique">Les musiciens</a><a href="#j-interpretes" data-to="j-interpretes">Les interprètes</a><a href="#j-cleaning" data-to="j-cleaning">Le service du cleaning</a><a href="#j-concierges" data-to="j-concierges">Les concierges</a><a href="#j-maintenance" data-to="j-maintenance">La maintenance</a><a href="#j-dates" data-to="j-dates">Dates clés</a></nav>
+    <nav class="jtoc"><a href="#j-fondation" data-to="j-fondation">La fondation</a><a href="#j-reveil" data-to="j-reveil">Le Réveil de Sion</a><a href="#j-diacres" data-to="j-diacres">Les diacres</a><a href="#j-admin" data-to="j-admin">Les administrateurs</a><a href="#j-huissiers" data-to="j-huissiers">Les huissiers</a><a href="#j-tech" data-to="j-tech">L'équipe technique</a><a href="#j-musique" data-to="j-musique">Les musiciens</a><a href="#j-interpretes" data-to="j-interpretes">Les interprètes</a><a href="#j-cleaning" data-to="j-cleaning">Le service du cleaning</a><a href="#j-concierges" data-to="j-concierges">Les concierges</a><a href="#j-maintenance" data-to="j-maintenance">La maintenance</a><a href="#j-dates" data-to="j-dates">Dates clés</a></nav>
 
     <article class="art" id="j-fondation">
       <div class="rub">Histoire · Fondation</div>
@@ -756,17 +767,17 @@ body.locked{overflow:hidden}
       <p class="quote">« Aujourd'hui cette parole de l'Écriture, que vous venez d'entendre, est accomplie. » — <a href="https://bible.com/bible/93/luk.4.21.LSG" target="_blank" rel="noopener">Luc 4:21</a></p>
     </article>
 
-    <article class="art" id="j-admin">
-      <div class="rub">Les équipes de Sion</div>
-      <h2>Les administrateurs</h2>
-      <p class="chapo">Ils veillent à la bonne marche de l'église : finances, patrimoine, organisation.</p>
-      <div class="team"><div><b>Président</b>[Nom]</div><div><b>Effectif total</b>[Nombre] membres</div><div><b>Composition</b>[Noms des membres]</div></div>
-    </article>
-
     <article class="art" id="j-diacres">
       <div class="rub">Les équipes de Sion</div>
       <h2>Les diacres</h2>
       <p class="chapo">Au service de l'assemblée : soutien aux familles, aide aux nécessiteux, ordre des cultes.</p>
+      <div class="team"><div><b>Président</b>[Nom]</div><div><b>Effectif total</b>[Nombre] membres</div><div><b>Composition</b>[Noms des membres]</div></div>
+    </article>
+
+    <article class="art" id="j-admin">
+      <div class="rub">Les équipes de Sion</div>
+      <h2>Les administrateurs</h2>
+      <p class="chapo">Ils veillent à la bonne marche de l'église : finances, patrimoine, organisation.</p>
       <div class="team"><div><b>Président</b>[Nom]</div><div><b>Effectif total</b>[Nombre] membres</div><div><b>Composition</b>[Noms des membres]</div></div>
     </article>
 
