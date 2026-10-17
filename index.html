@@ -949,7 +949,12 @@ body.locked{overflow:hidden}
     var k, e;
     for (k in D.t || {}) if ((e = q(k))) e.innerHTML = D.t[k];
     for (k in D.img || {}) if ((e = q(k)) && D.img[k]) { if (e.tagName === 'IMG') e.src = D.img[k]; else { e.setAttribute('data-img', D.img[k]); var i = e.querySelector('img'); if (i && document.documentElement.classList.contains('js')) i.src = D.img[k]; } }
-    for (k in D.vid || {}) if ((e = q(k)) && D.vid[k]) e.setAttribute('data-video', D.vid[k]);
+    for (k in D.vid || {}) if ((e = q(k))) { var v = D.vid[k] || '', p = e.querySelector('.poster');
+      if (/^data:image|\.(jpe?g|png|webp|gif|avif)([?#]|$)/i.test(v)) { /* affiche (image) à la place de la vidéo */
+        e.setAttribute('data-video', ''); var vd = e.querySelector('video'); if (vd) { vd.removeAttribute('src'); vd.hidden = true; }
+        if (!p) { p = document.createElement('div'); p.className = 'poster'; e.insertBefore(p, e.firstChild); }
+        p.innerHTML = '<img class="bg" alt="" aria-hidden="true" src="' + v + '"><img class="fg" alt="" src="' + v + '">'; e.classList.add('has-poster');
+      } else { if (p) { p.remove(); e.classList.remove('has-poster'); var vd2 = e.querySelector('video'); if (vd2) vd2.hidden = false; } if (v) e.setAttribute('data-video', v); } }
     var S = D.schedule;
     if (S && S.length) {
       var st = document.querySelector('#cultes .stats'), ln = document.querySelector('.lnext');
@@ -957,6 +962,9 @@ body.locked{overflow:hidden}
       if (ln) ln.innerHTML = S.map(function(x){ return '<div><small>' + J[x.d] + '</small><b>' + x.s + '</b><span>' + (x.l || 'Culte') + ' · ' + x.s + ' – ' + x.e + '</span></div>'; }).join('');
     }
   }
+  var pst = document.createElement('style');
+  pst.textContent = '.poster{position:absolute;inset:0;overflow:hidden;border-radius:inherit;background:#000}.poster img{position:absolute;inset:0;width:100%;height:100%}.poster .bg{object-fit:cover;filter:blur(28px) brightness(.45);transform:scale(1.15)}.poster .fg{object-fit:contain}.has-poster .ph{display:none!important}.has-poster .cap:empty{display:none}.has-poster .cap{text-shadow:0 2px 18px rgba(0,0,0,.6)}';
+  document.head.appendChild(pst);
   window.CMS_apply = apply; apply(C);
   if (!prev || parent === window) return;
   /* Aperçu admin : sélection d'un élément + mise à jour instantanée */

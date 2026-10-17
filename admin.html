@@ -61,7 +61,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .err{color:var(--bad);font-size:13.5px;text-align:center;min-height:18px;margin:-4px 0 0}
 .shake{animation:shake .45s}
 @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.pw{position:relative}.pw button{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--muted);padding:6px}
+.pw{position:relative}.pw button{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--muted);padding:6px;display:grid;border-radius:8px}.pw button:hover{color:#fff}.pw input{padding-right:44px}
 
 /* ===== App ===== */
 #app{position:fixed;inset:0;display:grid;grid-template-columns:268px minmax(0,1fr) var(--pv,440px);grid-template-rows:64px minmax(0,1fr);z-index:1}
@@ -134,6 +134,8 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .media-f{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center}
 .thumb{aspect-ratio:16/10;border-radius:14px;background:#0b0b0c center/cover no-repeat;border:1px dashed var(--line2);display:grid;place-items:center;color:var(--dim);font-size:12px;overflow:hidden;position:relative}
 .thumb video,.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb span{padding:8px;text-align:center}
+.fmt{color:var(--dim);font-size:12.5px;line-height:1.45}.fmt b{color:#d2d2d7;font-weight:600}
 .thumb.has{border-style:solid;border-color:transparent}
 .drop{outline:2px dashed var(--blue);outline-offset:4px}
 .mf-a{display:grid;gap:10px}
@@ -277,7 +279,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
       <p class="sub">Sion Tabernacle Lubumbashi</p>
       <form id="fIn" autocomplete="on">
         <div><label class="l" for="inName">Nom</label><input class="f" id="inName" autocomplete="username" required placeholder="Votre nom"></div>
-        <div><label class="l" for="inPw">Mot de passe</label><div class="pw"><input class="f" id="inPw" type="password" autocomplete="current-password" required placeholder="••••••••"><button type="button" data-eye aria-label="Afficher le mot de passe">👁</button></div></div>
+        <div><label class="l" for="inPw">Mot de passe</label><div class="pw"><input class="f" id="inPw" type="password" autocomplete="current-password" required placeholder="••••••••"><button type="button" data-eye aria-label="Afficher le mot de passe"><svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
         <p class="err" id="inErr"></p>
         <button class="btn" type="submit">Se connecter</button>
       </form>
@@ -289,7 +291,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
       <form id="fSetup">
         <div><label class="l" for="suName">Votre nom</label><input class="f" id="suName" required placeholder="Ex. Frère Jean"></div>
         <div><label class="l" for="suTok">Jeton GitHub</label><input class="f" id="suTok" required placeholder="github_pat_…" autocomplete="off" spellcheck="false"></div>
-        <div><label class="l" for="suPw">Mot de passe (12 caractères min.)</label><div class="pw"><input class="f" id="suPw" type="password" minlength="12" required autocomplete="new-password"><button type="button" data-eye aria-label="Afficher">👁</button></div></div>
+        <div><label class="l" for="suPw">Mot de passe (12 caractères min.)</label><div class="pw"><input class="f" id="suPw" type="password" minlength="12" required autocomplete="new-password"><button type="button" data-eye aria-label="Afficher"><svg class="ic" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
         <div><label class="l" for="suPw2">Confirmer</label><input class="f" id="suPw2" type="password" minlength="12" required autocomplete="new-password"></div>
         <p class="err" id="suErr"></p>
         <button class="btn" type="submit">Créer l'accès</button>
@@ -343,6 +345,7 @@ const IC = {
   tv: I('<rect x="2" y="5" width="20" height="13" rx="3"/><path d="m10 9 5 2.5-5 2.5z"/>'), foot: I('<path d="M3 17h18M3 21h18M7 3h10v10H7z"/>'), search: I('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
   up: I('<path d="m18 15-6-6-6 6"/>'), down: I('<path d="m6 9 6 6 6-6"/>'), x: I('<path d="M18 6 6 18M6 6l12 12"/>'), plus: I('<path d="M12 5v14M5 12h14"/>'),
   reset: I('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'), upload: I('<path d="M12 16V4M6 10l6-6 6 6M4 20h16"/>'), link: I('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
+  ret: I('<path d="M20 5v7a3 3 0 0 1-3 3H5"/><path d="m9 11-4 4 4 4"/>'), clr: I('<path d="M5 6h12M11 6 8 20M4 4l16 16"/>'),
   check: I('<path d="m5 12 5 5L20 7"/>'), out: I('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'), video: I('<rect x="2" y="6" width="14" height="12" rx="3"/><path d="m16 10 6-3v10l-6-3z"/>')
 };
 
@@ -448,7 +451,7 @@ function logout(){ ssSet('sion_adm', null); location.reload(); }
 
 /* ================= Démarrage ================= */
 async function start(){
-  $('#login').style.transition = 'opacity .5s'; $('#login').style.opacity = 0; setTimeout(() => { $('#login').remove(); $('.aurora').remove(); }, 500);
+  $('#login').style.transition = 'opacity .5s'; $('#login').style.opacity = 0; setTimeout(() => $('#login').remove(), 500);
   $('#app').hidden = false; island('Chargement du site…', 'w', 0);
   try {
     const [html, pub] = await Promise.all([
@@ -565,7 +568,7 @@ VIEWS.dash = v => {
   const t = FIELDS.filter(f => f.kind === 't').length, m = FIELDS.length - t, c = changes().length;
   v.innerHTML = head('Tableau de bord', `Bonjour, <span class="gt">${esc(USER)}.</span>`, 'Tout ce qui est visible sur le site se modifie ici. Les changements restent en brouillon jusqu\'à ce que vous cliquiez sur « Publier ».') +
   `<div class="hero-c"><h3 id="ncT">Prochain culte</h3><p id="ncS"></p><div class="cd" id="ncD"></div></div>
-   <div class="kpis"><div class="kpi"><small>Textes modifiables</small><b>${t}</b></div><div class="kpi"><small>Photos & vidéos</small><b>${m}</b></div><div class="kpi"><small>Sections</small><b>${new Set(FIELDS.map(f => f.sec)).size}</b></div><div class="kpi"><small>Brouillon</small><b>${c ? c + ' en attente' : 'À jour ✓'}</b></div></div>
+   <div class="kpis"><div class="kpi"><small>Textes modifiables</small><b>${t}</b></div><div class="kpi"><small>Photos & vidéos</small><b>${m}</b></div><div class="kpi"><small>Sections</small><b>${new Set(FIELDS.map(f => f.sec)).size}</b></div><div class="kpi"><small>Brouillon</small><b>${c ? c + ' en attente' : `À jour <span style="color:var(--ok);display:inline-flex;vertical-align:-2px">${IC.check}</span>`}</b></div></div>
    <div class="search"><span>${IC.search}</span><input class="f" id="q" placeholder="Rechercher un texte sur le site… (ex. « garage », « 09:30 »)"></div><div class="res" id="qr"></div>
    <div class="tiles" style="margin-top:18px">
     ${[['cal', IC.cal, 'Programme', 'Jours et heures des cultes, compte à rebours, directs'], ['medias-img', IC.img, 'Photos & vidéos', 'Images et vidéos des sections du site'], ['photos', IC.img, 'Galerie', 'Photos de l\'onglet Médias'],
@@ -607,17 +610,31 @@ function secView(s, v = $('#view')){
 }
 function textField(f){
   return `<div class="fld${isMod(f) ? ' mod' : ''}" data-k="${f.k}"><div class="fh"><span class="t">${esc(f.label)}${f.n ? ' ' + f.n : ''}</span><span class="sp"></span>
-    <div class="tb"><button data-c="bold" title="Gras"><b>B</b></button><button data-c="italic" title="Italique"><i>I</i></button><button data-c="grad" class="g" title="Texte en dégradé">A</button><button data-c="link" title="Lien">${IC.link}</button><button data-c="br" title="Retour à la ligne">↵</button><button data-c="clear" title="Retirer la mise en forme">T̸</button><button data-c="reset" title="Revenir au texte d'origine">${IC.reset}</button></div>
+    <div class="tb"><button data-c="bold" title="Gras"><b>B</b></button><button data-c="italic" title="Italique"><i>I</i></button><button data-c="grad" class="g" title="Texte en dégradé">A</button><button data-c="link" title="Lien">${IC.link}</button><button data-c="br" title="Retour à la ligne">${IC.ret}</button><button data-c="clear" title="Retirer la mise en forme">${IC.clr}</button><button data-c="reset" title="Revenir au texte d'origine">${IC.reset}</button></div>
     <button class="tb" data-c="go" title="Voir sur le site" style="opacity:1;color:var(--muted);padding:4px">${IC.search}</button></div>
     <div class="ed ${f.style}" contenteditable="true" spellcheck="true">${val(f)}</div></div>`;
 }
+const isImg = u => /^data:image|^blob:|\.(jpe?g|png|webp|gif|avif)([?#]|$)/i.test(u || '');
+const POSTER = k => k.startsWith('vid.evenements');
+/* Format attendu pour chaque emplacement : ratio de la vignette + consignes */
+function fmt(f, img){
+  const k = f.k;
+  if (POSTER(k)) return img ? {r: '16/10', h: '<b>Affiche</b> — JPG ou PNG. Idéal : paysage 16:10 (1920 × 1200 px). Une affiche portrait (A4, 1080 × 1350 px) s\'affiche entière sur un fond flouté. Sur téléphone, le cadre devient 3:4 : gardez le texte important au centre. Laissez la légende vide si l\'affiche contient déjà son texte.'}
+    : {r: '16/10', h: '<b>Vidéo</b> — MP4 (H.264), paysage 16:10 ou 16:9 (1920 × 1080 px), 10 à 30 s en boucle, sans son, 25 Mo max. Sur téléphone, les bords sont recadrés en 3:4.'};
+  if (k.startsWith('vid.apercu')) return {r: '16/9', h: 'Vidéo de fond plein écran — MP4 16:9 (1920 × 1080 px), boucle courte et sans son, 25 Mo max. Évitez le texte dans la vidéo.'};
+  if (k.startsWith('vid.')) return {r: '16/9', h: 'Vidéo — MP4 paysage 16:9 (1920 × 1080 px), sans son, 25 Mo max. Pour une longue vidéo, utilisez un lien.'};
+  if (k === 'img.apercu.1') return {r: '9/7', h: 'Logo — PNG à fond transparent, 900 px de large minimum. La transparence est conservée.'};
+  return {r: '4/5', h: 'Photo portrait 4:5 (1200 × 1500 px) — JPG, PNG ou WebP. Redimensionnée et optimisée automatiquement.'};
+}
 function mediaField(f){
-  const u = val(f), src = PEND[u]?.url || u, has = !!u;
-  const th = !has ? (f.kind === 'img' ? 'Aucune image' : 'Aucune vidéo') : f.kind === 'img' ? `<img alt="" src="${esc(src)}">` : (/youtu/.test(src) ? 'YouTube' : `<video src="${esc(src)}" muted playsinline preload="metadata"></video>`);
-  return `<div class="fld${isMod(f) ? ' mod' : ''}" data-k="${f.k}" data-m><div class="fh"><span class="t">${f.kind === 'img' ? IC.img : IC.video} ${esc(f.label)}</span><span class="sp"></span><span class="tag">${esc(SEC[f.sec]?.[0] || f.sec)}</span></div>
-    <div class="media-f"><div class="thumb${has ? ' has' : ''}">${th}</div><div class="mf-a">
-      <div class="row"><button class="btn sm" data-c="up">${IC.upload} ${f.kind === 'img' ? 'Changer l\'image' : 'Téléverser une vidéo'}</button>${f.kind === 'vid' ? `<button class="btn ghost sm" data-c="url">${IC.link} Lien</button>` : ''}<button class="btn ghost sm" data-c="reset">${IC.reset}</button></div>
-      <small style="color:var(--dim)">${f.kind === 'img' ? 'JPG, PNG ou WebP — redimensionnée et optimisée automatiquement. Glissez-déposez ici.' : 'MP4 conseillé, 25 Mo max. Pour les longues vidéos, utilisez un lien.'}</small>
+  const u = val(f), src = PEND[u]?.url || u, has = !!u, img = f.kind === 'img' || isImg(u) || (PEND[u] && /\.(jpe?g|png|webp)$/.test(u)), F = fmt(f, img && f.kind === 'vid');
+  const th = !has ? `<span>${f.kind === 'img' ? 'Aucune image' : POSTER(f.k) ? 'Aucune vidéo ni affiche' : 'Aucune vidéo'}</span>` : img ? `<img alt="" src="${esc(src)}" style="object-fit:${POSTER(f.k) ? 'contain' : 'cover'}">` : (/youtu/.test(src) ? 'YouTube' : `<video src="${esc(src)}" muted playsinline preload="metadata"></video>`);
+  const type = f.kind === 'vid' && POSTER(f.k) && has ? `<span class="tag">${img ? 'Affiche' : 'Vidéo'}</span>` : '';
+  return `<div class="fld${isMod(f) ? ' mod' : ''}" data-k="${f.k}" data-m><div class="fh"><span class="t">${f.kind === 'img' || img ? IC.img : IC.video} ${esc(f.label)}</span>${type}<span class="sp"></span><span class="tag">${esc(SEC[f.sec]?.[0] || f.sec)}</span></div>
+    <div class="media-f"><div class="thumb${has ? ' has' : ''}" style="aspect-ratio:${F.r}">${th}</div><div class="mf-a">
+      <div class="row">${f.kind === 'img' ? `<button class="btn sm" data-c="up">${IC.upload} Changer l'image</button>`
+        : `<button class="btn sm" data-c="up">${IC.video} ${POSTER(f.k) ? 'Vidéo' : 'Téléverser une vidéo'}</button>${POSTER(f.k) ? `<button class="btn sm" data-c="upi">${IC.img} Affiche</button>` : ''}<button class="btn ghost sm" data-c="url">${IC.link} Lien</button>`}<button class="btn ghost sm" data-c="reset" title="Revenir à l'origine">${IC.reset}</button></div>
+      <small class="fmt">${F.h}</small>
     </div></div></div>`;
 }
 function wire(v){
@@ -634,8 +651,9 @@ function wire(v){
       const c = b.dataset.c;
       if (c === 'reset') { setVal(f, f.def); if (ed) ed.innerHTML = f.def; else refreshMedia(card, f); return island('Valeur d\'origine rétablie'); }
       if (c === 'go') { openPv(); return post({cmsGo: f.k}); }
-      if (c === 'up') return pickFile(f.kind === 'img' ? 'image/*' : 'video/mp4,video/webm', file => upload(file, f, card));
-      if (c === 'url') { const u = prompt('Lien de la vidéo (MP4 direct) :', val(f).startsWith('data:') ? '' : val(f)); if (u != null) { setVal(f, u.trim() || f.def); refreshMedia(card, f); } return; }
+      if (c === 'up') return pickFile(f.kind === 'img' ? 'image/*' : 'video/mp4,video/webm,video/quicktime', file => upload(file, f, card));
+      if (c === 'upi') return pickFile('image/*', file => upload(file, f, card));
+      if (c === 'url') { const u = prompt(POSTER(f.k) ? 'Lien direct de la vidéo (MP4) ou de l\'affiche (JPG/PNG) :' : 'Lien direct de la vidéo (MP4) :', val(f).startsWith('data:') ? '' : val(f)); if (u != null) { setVal(f, u.trim() || f.def); refreshMedia(card, f); } return; }
       ed.focus();
       if (c === 'bold' || c === 'italic') document.execCommand(c);
       else if (c === 'br') document.execCommand('insertHTML', false, '<br>');
@@ -646,7 +664,9 @@ function wire(v){
         if (g && ed.contains(g)) g.replaceWith(...g.childNodes); else { const sp = document.createElement('span'); sp.className = 'gt'; sp.appendChild(r.extractContents()); r.insertNode(sp); } }
       setVal(f, clean(ed.innerHTML));
     });
-    if (card.hasAttribute('data-m')) dropzone(card, file => upload(file, f, card));
+    if (card.hasAttribute('data-m')) dropzone(card, file => { const im = file.type.startsWith('image/'), vd = file.type.startsWith('video/');
+      if (f.kind === 'img' ? !im : !(vd || (im && POSTER(f.k)))) return island(f.kind === 'img' ? 'Déposez une image' : POSTER(f.k) ? 'Déposez une vidéo ou une affiche' : 'Déposez une vidéo', 'e');
+      upload(file, f, card); });
   });
 }
 function refreshMedia(card, f){ const n = document.createElement('div'); n.innerHTML = mediaField(f); const c = n.firstElementChild; card.replaceWith(c); wire(c); }
@@ -673,8 +693,8 @@ async function prep(file){
     const bmp = await createImageBitmap(file), s = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
     const c = document.createElement('canvas'); c.width = Math.round(bmp.width * s); c.height = Math.round(bmp.height * s);
     c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .85));
-    return {blob, ext: 'jpg'};
+    const png = file.type === 'image/png', blob = await new Promise(r => c.toBlob(r, png ? 'image/png' : 'image/jpeg', .85));
+    return {blob, ext: png ? 'png' : 'jpg', w: c.width, h: c.height};
   }
   return {blob: file, ext: (file.name.split('.').pop() || 'bin').toLowerCase()};
 }
@@ -689,7 +709,9 @@ async function stage(file, kind){
   island('Prêt — sera envoyé à la publication', 'ok');
   return path;
 }
-async function upload(file, f, card){ const p = await stage(file, f.kind); if (!p) return; setVal(f, p); refreshMedia(card, f); }
+async function upload(file, f, card){ const p = await stage(file, f.kind); if (!p) return; setVal(f, p); refreshMedia(card, f);
+  if (POSTER(f.k) && file.type.startsWith('image/')) { const im = new Image(); im.onload = () => { const r = im.width / im.height;
+    island(r < 1.2 ? 'Affiche portrait : affichée entière sur fond flouté' : r > 1.9 ? 'Affiche très large : bords flous en haut et en bas' : 'Format paysage idéal', 'ok', 3800); }; im.src = PEND[p].url; } }
 
 /* --- Photos & vidéos du site --- */
 VIEWS['medias-img'] = v => {
@@ -837,7 +859,7 @@ async function publish(){
     const f = await getFile(CONTENT);
     await putFile(CONTENT, b64u(JSON.stringify(out, null, 1)), 'Admin : mise à jour du contenu (' + USER + ')', f && f.sha);
     PUB = clone(out); delete PUB.updated; delete PUB.by; D = clone(PUB);
-    syncDraft(true); island('Publié ✓ — en ligne dans 1 à 2 min', 'ok', 4000); go(ROUTE);
+    syncDraft(true); island('Publié — en ligne dans 1 à 2 min', 'ok', 4000); go(ROUTE);
   } catch(e) { island('Échec : ' + e.message, 'e', 6000); return false; }
 }
 $('#undoAll').onclick = () => modal('<h3>Annuler toutes les modifications ?</h3><p>Le brouillon sera remplacé par la version actuellement en ligne.</p>', 'Tout annuler', () => { D = clone(PUB); PEND = {}; syncDraft(); go(ROUTE); reload(); }, true);
