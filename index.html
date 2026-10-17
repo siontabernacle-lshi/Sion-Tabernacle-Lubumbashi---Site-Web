@@ -1048,7 +1048,7 @@ let VIDEOS = [
   function fitT(){ const h = document.getElementById('mt'); h.style.fontSize = ''; if (!h.clientWidth) return;
     let z = parseFloat(getComputedStyle(h).fontSize);
     while (z > 18 && (h.scrollWidth > h.clientWidth + 1 || h.scrollHeight > z * .95 * 3 + 4)){ z -= 2; h.style.fontSize = z + 'px'; } }
-  new ResizeObserver(fitT).observe(hero);
+  let fw = 0; new ResizeObserver(en => { const w = Math.round(en[0].contentRect.width); if (w && w !== fw){ fw = w; requestAnimationFrame(fitT); } }).observe(hero);
   function setHero(i, fade){
     clearTimeout(sw); arm();
     if (fade && !reduce){ hero.classList.add('sw'); sw = setTimeout(() => { setHero(i); requestAnimationFrame(() => hero.classList.remove('sw')); }, 700); return; }
