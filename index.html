@@ -1173,9 +1173,10 @@ vEv.addEventListener('click', e => {
   if (a === 'forms'){ e.stopPropagation(); DI.forms(); }
   else if (a === 'pl-toggle'){ e.stopPropagation(); if (!media) return; if (media.el) media.el.paused ? media.el.play().catch(()=>{}) : media.el.pause(); else { media.playing = !media.playing; if (media.fr) ytCmd(media.playing ? 'playVideo' : 'pauseVideo'); syncMedia(); } }
   else if (a === 'pl-prev' || a === 'pl-next'){ e.stopPropagation(); if (!media) return; const d = a === 'pl-next' ? 1 : -1;
-    if (media.simu) media.cur = 0; else if (media.kind === 'audio') window.trackStep && trackStep(d); else if (media.el) media.el.currentTime += d * 10; paint(); }
+    if (media.simu) media.cur = 0; else if (media.kind === 'audio') window.trackStep && trackStep(d); else if (media.el) media.el.currentTime += d * 10; else if (media.fr){ media.cur = Math.max(0, media.cur + d * 10); ytCmd('seekTo', [media.cur, true]); } paint(); }
   else if (a === 'pl-close'){ e.stopPropagation(); if (media && media.el) media.el.pause(); ytCmd('pauseVideo'); clearMedia(); home(); }
   else if (a === 'pl-open'){ home(); setTimeout(() => { const t = document.querySelector('#medias .mnav button[data-p="lives"]'); if (t) t.click(); }, 60); }
+  else if (a === 'pl-go'){ const k = media && media.kind === 'audio' ? 'musique' : 'videos'; home(); setTimeout(() => { const t = document.querySelector('#medias .mnav button[data-p="' + k + '"]'); if (t) t.click(); }, 60); }
   else if (a === 'rem'){ e.stopPropagation(); toggleRem(); }
   if (b.dataset.act === 'unmute'){ muted = false; applySound(); DI.volume(vol); }
   else if (b.dataset.act === 'mute'){ muted = true; applySound(); DI.sound(); }
@@ -1243,7 +1244,7 @@ const DI = {
       ${b('video','#bf5af2',I.film,'Lecteur vidéo')}${b('plive','#ff453a',I.cam,'Lecteur live')}</div></div>`); },
   // 8. Lecteur : vidéo, live ou musique en lecture / en pause
   player: ms => openPlayer(ms),
-  track: el => trackEl(el), trackYT: (fr, t) => setMedia({kind:'video', fr, playing:true, title: t || 'Vidéo', sub:'Sion Tabernacle'}, 4000),
+  track: el => trackEl(el), trackYT: (fr, t) => (ytListen(fr), setMedia({kind:'video', fr, playing:true, title: t || 'Vidéo', sub:'Sion Tabernacle', cur:0, dur:NaN}, 4000)),
   unmute(){ muted = false; applySound(); },
   // 9. Rappel 1 h 30 avant le culte
   remind(r, h, ms = 9000){ const d = r >= 60 ? Math.floor(r/60) + ' h' + (r%60 ? ' ' + String(r%60).padStart(2,'0') : '') : r + ' min';
@@ -1264,7 +1265,12 @@ function clearMedia(simOnly){ if (simOnly && !(media && media.simu)) return; med
 function setMedia(m, ms){ clearMedia(); media = m; di.classList.add('is-media'); di.classList.toggle('is-paused', !m.playing);
   mT = setInterval(tick, 500); if (!mode || mode === 'player' || mode === 'forms') openPlayer(ms); }
 function syncMedia(){ if (!media) return; di.classList.toggle('is-paused', !media.playing); paint(); }
-const ytCmd = f => media && media.fr && media.fr.contentWindow && media.fr.contentWindow.postMessage(JSON.stringify({event:'command', func:f, args:''}), '*');
+const ytCmd = (f, args) => media && media.fr && media.fr.contentWindow && media.fr.contentWindow.postMessage(JSON.stringify({event:'command', func:f, args: args || ''}), '*');
+const ytListen = fr => fr.addEventListener('load', () => { let n = 0; const t = setInterval(() => { if (++n > 10 || !fr.isConnected) return clearInterval(t); fr.contentWindow.postMessage(JSON.stringify({event:'listening', id:1, channel:'widget'}), '*'); }, 500); });
+window.addEventListener('message', e => { if (!media || !media.fr || e.source !== media.fr.contentWindow) return; let d; try { d = JSON.parse(e.data); } catch(_) { return; }
+  const i = d && d.info; if (!i) return; if (i.currentTime != null) media.cur = i.currentTime; if (i.duration) media.dur = i.duration;
+  if (i.playerState === 0){ clearMedia(); if (mode === 'player') home(); return; }
+  if (i.playerState === 1 || i.playerState === 2){ const p = i.playerState === 1; if (p !== media.playing){ media.playing = p; syncMedia(); } } });
 function tick(){ if (!media) return; if ((media.el || media.fr) && !(media.el || media.fr).isConnected){ clearMedia(); if (mode === 'player') home(); return; }
   if (media.simu && media.playing && media.kind !== 'live') media.cur = (media.cur + .5) % media.dur; paint(); }
 function paint(){ const p = vEv.querySelector('.e-player'); if (mode !== 'player' || !p || !media) return;
@@ -1278,7 +1284,7 @@ function openPlayer(ms){ if (!media) return; const lv = media.kind === 'live', e
   show('player', `<div class="e-player"><div class="pl-top"><span class="pl-art">${lv ? I.cam : media.kind === 'audio' ? I.note : I.film}</span>
     <div class="pl-meta"><b>${esc(media.title)}</b><span>${esc(media.sub)}</span></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
     <div class="pl-prog${lv ? ' lv' : ''}"><span class="c">${lv ? 'EN DIRECT' : ''}</span><span class="bar"><i></i></span><span class="r"></span></div>
-    <div class="pl-ctl">${lv ? '' : `<button data-act="pl-prev" aria-label="Précédent">${I.prev}</button>`}<button data-act="pl-toggle" aria-label="Lecture / pause"></button>${lv ? `<a href="#medias" data-act="pl-open">Ouvrir</a>` : `<button data-act="pl-next" aria-label="Suivant">${I.next}</button>`}<button class="x" data-act="pl-close" aria-label="Arrêter">${I.x}</button></div></div>`, ms);
+    <div class="pl-ctl">${lv ? '' : `<button data-act="pl-prev" aria-label="Précédent">${I.prev}</button>`}<button data-act="pl-toggle" aria-label="Lecture / pause"></button>${lv ? `<a href="#medias" data-act="pl-open">Ouvrir</a>` : `<button data-act="pl-next" aria-label="Suivant">${I.next}</button><a href="#medias" data-act="pl-go">Ouvrir</a>`}<button class="x" data-act="pl-close" aria-label="Arrêter">${I.x}</button></div></div>`, ms);
   paint(); }
 function trackEl(el){ if (el.tagName === 'VIDEO' && el.loop) return;
   if (media && media.el === el){ media.playing = true; return syncMedia(); }
