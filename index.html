@@ -1092,10 +1092,14 @@ let VIDEOS = [
     return [...d.getElementsByTagName('entry')].map(e => { const g = n => (e.getElementsByTagName(n)[0]||{}).textContent || '';
       const t = g('title'); return {yt:g('yt:videoId'), t, c:cat(t), d:g('published').slice(0,10), desc:''}; }).filter(v => v.yt); };
   const RELAIS = ['https://api.allorigins.win/raw?url=' + E, 'https://corsproxy.io/?url=' + E, 'https://api.codetabs.com/v1/proxy?quest=' + E];
-  (function tryNext(k){ if (k >= RELAIS.length) return;
+  const apply = list => { if (!list || !list.length) return; VIDEOS = list; try { localStorage.setItem('sion_yt', JSON.stringify(list)); } catch(e){}
+    if (!hero.classList.contains('playing')) render(); };
+  // 1) videos.json mis à jour automatiquement sur GitHub (fiable) ; 2) sinon relais publics
+  fetch('videos.json?' + Date.now()).then(r => r.ok ? r.json() : Promise.reject()).then(l => { l = l.map(v => ({...v, c: v.c || cat(v.t)})); if (!l.length) throw 0; apply(l); }).catch(() => tryNext(0));
+  function tryNext(k){ if (k >= RELAIS.length) return;
     fetch(RELAIS[k]).then(r => r.ok ? r.text() : Promise.reject()).then(x => { const list = parse(x); if (!list.length) throw 0;
       VIDEOS = list; try { localStorage.setItem('sion_yt', JSON.stringify(list)); } catch(e){}
-      if (!hero.classList.contains('playing')) render(); }).catch(() => tryNext(k + 1)); })(0);
+      if (!hero.classList.contains('playing')) render(); }).catch(() => tryNext(k + 1)); }
 })();
 
 
