@@ -1260,7 +1260,9 @@ const DI = {
 };
 
 // Lecteur
-const mmss = s => isFinite(s) ? Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0') : '–:––';
+const mmss = s => { if (!isFinite(s)) return '–:––'; s = Math.max(0, Math.floor(s)); const p = n => String(n).padStart(2,'0'),
+  j = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), c = s % 60;
+  return j ? j + 'j ' + p(h) + ':' + p(m) + ':' + p(c) : h ? h + ':' + p(m) + ':' + p(c) : m + ':' + p(c); };
 function clearMedia(simOnly){ if (simOnly && !(media && media.simu)) return; media = null; clearInterval(mT); di.classList.remove('is-media','is-paused'); }
 function setMedia(m, ms){ clearMedia(); media = m; di.classList.add('is-media'); di.classList.toggle('is-paused', !m.playing);
   mT = setInterval(tick, 500); if (!mode || mode === 'player' || mode === 'forms') openPlayer(ms); }
