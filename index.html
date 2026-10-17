@@ -454,7 +454,7 @@ body.locked{overflow:hidden}
 .pl-meta b{display:block;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pl-meta span{display:block;color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eq{display:flex;align-items:center;gap:2px;height:16px;flex:none}
-.pl-prog{display:flex;align-items:center;gap:10px;margin:14px 0 8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pl-prog{display:flex;align-items:center;gap:10px;min-height:16px;line-height:16px;margin:14px 0 8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .pl-prog .bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
 .pl-prog .bar i{display:block;height:100%;width:0;border-radius:3px;background:#fff}
 .pl-prog.lv .bar i{width:100%;background:#ff453a}.pl-prog.lv .c{color:#ff453a;font-weight:700}
@@ -1291,7 +1291,7 @@ function openPlayer(ms){ if (!media) return; const lv = media.kind === 'live', e
     <div class="pl-meta"><b>${esc(media.title)}</b><span>${(() => { const k = lv ? 'Direct' : media.kind === 'audio' ? 'Musique' : 'Vidéo'; return esc(media.sub && media.sub !== k ? k + ' — ' + media.sub : k); })()}</span></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
     <div class="pl-prog${lv ? ' lv' : ''}"><span class="c">${lv ? 'EN DIRECT' : ''}</span><span class="bar"><i></i></span><span class="r"></span></div>
     <div class="pl-ctl">${lv ? '' : `<button data-act="pl-prev" aria-label="Précédent">${I.prev}</button>`}<button data-act="pl-toggle" aria-label="Lecture / pause"></button>${lv ? `<a href="#medias" data-act="pl-open">Ouvrir</a>` : `<button data-act="pl-next" aria-label="Suivant">${I.next}</button><a href="#medias" data-act="pl-go">Ouvrir</a>`}<button class="x" data-act="pl-close" aria-label="Arrêter">${I.x}</button></div></div>`, ms);
-  paint(); }
+  paint(); fit(); }
 function trackEl(el){ if (el.tagName === 'VIDEO' && el.loop) return;
   if (media && media.el === el){ media.playing = true; return syncMedia(); }
   const au = el.tagName === 'AUDIO', mt = document.getElementById('mt');
