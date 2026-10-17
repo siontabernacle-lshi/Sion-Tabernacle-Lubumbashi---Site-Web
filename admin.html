@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
+<link rel="icon" href="media/icon.png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
@@ -16,7 +17,8 @@
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Helvetica Neue",Arial,sans-serif;
   --r:20px; color-scheme:dark;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;min-width:0}
+img,video{max-width:100%}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font:15px/1.47 var(--font);letter-spacing:-.016em;-webkit-font-smoothing:antialiased;overflow:hidden}
 button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
@@ -29,20 +31,19 @@ a{color:var(--blue);text-decoration:none}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn.ghost{background:rgba(255,255,255,.08);color:var(--fg)}.btn.ghost:hover{background:rgba(255,255,255,.14)}
 .btn.sm{padding:7px 14px;font-size:13px}
-.btn.danger{background:rgba(255,69,58,.14);color:var(--bad)}
-.ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn.danger{background:rgba(255,69,58,.14);color:var(--bad)}.btn.danger:hover{background:rgba(255,69,58,.24)}
+.ic{width:18px;height:18px;min-width:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 input.f,select.f,textarea.f{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line2);border-radius:12px;padding:11px 14px;outline:0;transition:border-color .2s,background .2s}
 input.f:focus,select.f:focus,textarea.f:focus{border-color:var(--blue);background:rgba(41,151,255,.06)}
 label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weight:500;text-transform:uppercase;letter-spacing:.08em}
 
 /* ===== Aurora ===== */
-.aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none;filter:blur(90px);opacity:.55}
-.aurora i{position:absolute;border-radius:50%;animation:drift 22s ease-in-out infinite alternate}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+.aurora i{position:absolute;border-radius:50%}
 .aurora i:nth-child(1){width:46vw;height:46vw;left:8%;top:6%;background:radial-gradient(circle,var(--g2),transparent 65%)}
 .aurora i:nth-child(2){width:40vw;height:40vw;right:6%;top:24%;background:radial-gradient(circle,var(--g3),transparent 65%);animation-delay:-7s}
 .aurora i:nth-child(3){width:38vw;height:38vw;left:30%;bottom:0;background:radial-gradient(circle,var(--g4),transparent 65%);animation-delay:-14s}
-@keyframes drift{to{transform:translate(6vw,-4vh) scale(1.12)}}
-@media (prefers-reduced-motion:reduce){.aurora i{animation:none}}
+
 
 /* ===== Connexion ===== */
 #login{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:24px;overflow:auto}
@@ -65,15 +66,17 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 #app{position:fixed;inset:0;display:grid;grid-template-columns:268px minmax(0,1fr) var(--pv,440px);grid-template-rows:64px minmax(0,1fr);z-index:1}
 #app[hidden]{display:none}
 #app.nopv{--pv:0px}
-.top{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.72);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);position:relative;z-index:5}
-.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;min-width:0}
-.brand .mark{width:32px;height:32px;border-radius:9px;margin:0;box-shadow:none}.brand .mark span{width:28px;height:28px;border-radius:7px;font-size:14px}
-.brand small{color:var(--muted);font-weight:500}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid var(--line);background:#000;min-width:0;position:relative;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand img{height:40px;width:auto;display:block}
+.badge{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:7px;color:#000;background:var(--grad)}
+.logo-l{display:block;width:150px;height:auto;margin:0 auto 18px;filter:drop-shadow(0 10px 30px rgba(255,138,61,.25))}
 .top .sp{flex:1}
-.state{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:6px 12px;border-radius:980px;background:rgba(255,255,255,.05)}
+.state{white-space:nowrap;overflow:hidden;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:6px 12px;border-radius:980px;background:rgba(255,255,255,.05)}
 .state i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
 .state.dirty i{background:var(--warn);box-shadow:0 0 10px var(--warn)}
-.menu-b,.pv-b{display:none;padding:8px;border-radius:10px;color:var(--fg)}
+.pv-b.on{color:var(--blue);background:rgba(41,151,255,.14)}
+.pv-b{display:grid}.menu-b{display:none}.menu-b,.pv-b{flex:none;padding:8px;border-radius:10px;color:var(--fg)}
 .menu-b:hover,.pv-b:hover{background:rgba(255,255,255,.08)}
 
 /* Barre latérale */
@@ -88,8 +91,8 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .nav .d+.n{margin-left:6px}
 .who{margin:22px 4px 0;padding:14px;border-radius:16px;background:var(--tile2);border:1px solid var(--line);display:flex;align-items:center;gap:10px}
 .av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--grad);color:#000;flex:none}
-.who b{display:block;font-size:14px;font-weight:600;line-height:1.2}.who small{color:var(--muted);font-size:12px}
-.who button{margin-left:auto;color:var(--muted);padding:6px;border-radius:8px}.who button:hover{color:var(--bad);background:rgba(255,69,58,.1)}
+.who>div:nth-child(2){flex:1;overflow:hidden}.who b{display:block;font-size:14px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.who small{color:var(--muted);font-size:12px}
+.who button{flex:none;margin-left:auto;color:var(--muted);padding:6px;border-radius:8px}.who button:hover{color:var(--bad);background:rgba(255,69,58,.1)}
 
 /* Éditeur */
 .main{overflow:auto;scroll-behavior:smooth}
@@ -142,8 +145,8 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .sch{grid-template-columns:1.2fr .8fr .8fr 1.4fr auto}
 .trk{grid-template-columns:44px 1.4fr 1fr .6fr auto}
 .mini{display:flex;gap:2px}
-.mini button{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--muted)}
-.mini button:hover{background:rgba(255,255,255,.08);color:#fff}
+.mini{flex-wrap:wrap}.mini button:not(.btn){width:32px;height:32px;border-radius:9px;display:grid;place-items:center;color:var(--muted)}
+.mini button:not(.btn):hover{background:rgba(255,255,255,.08);color:#fff}
 .mini button.x:hover{color:var(--bad);background:rgba(255,69,58,.12)}
 .addrow{width:100%;padding:14px;border-radius:16px;border:1px dashed var(--line2);color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
 .addrow:hover{color:#fff;border-color:var(--blue);background:rgba(41,151,255,.06)}
@@ -154,6 +157,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .pc .b{padding:10px 10px 12px;display:grid;gap:8px}
 .pc input{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:6px 2px}
 .pc .mini{justify-content:space-between}
+.usr{grid-template-columns:auto minmax(0,1fr) auto}.un b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.un small{color:var(--muted);font-size:12.5px}.ua{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .play{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);display:grid;place-items:center}
 
 /* Semaine (programme) */
@@ -183,11 +187,11 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .cd div{background:rgba(0,0,0,.35);border-radius:14px;padding:10px 14px;min-width:74px;text-align:center}
 .cd b{display:block;font-size:26px;font-variant-numeric:tabular-nums}.cd small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
 .note{font-size:13.5px;color:var(--muted);background:rgba(41,151,255,.07);border:1px solid rgba(41,151,255,.2);padding:12px 14px;border-radius:14px}
-.search{position:relative;margin:0 0 18px}.search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}.search input{padding-left:42px}
+.search{position:relative;margin:0 0 18px}.search>span{position:absolute;left:14px;top:50%;transform:translateY(-50%);display:flex;color:var(--muted)}.search input{padding-left:42px}
 .res{display:grid;gap:8px}
 .res button{text-align:left;background:var(--tile);border-radius:14px;padding:12px 16px;display:grid;gap:2px}
 .res button:hover{background:#232325}.res small{color:var(--g2);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.res span{color:#d2d2d7;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.res span{color:#d2d2d7;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Aperçu */
 .pv{border-left:1px solid var(--line);display:flex;flex-direction:column;background:var(--bg2);min-width:0;overflow:hidden}
@@ -222,7 +226,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 .mbox h3{margin:0 0 6px;font-size:22px;letter-spacing:-.02em}.mbox p{color:var(--muted);margin:0 0 18px}
 .mbox .acts{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
 .diff{max-height:300px;overflow:auto;display:grid;gap:6px}
-.diff div{background:rgba(255,255,255,.04);padding:9px 12px;border-radius:10px;font-size:13.5px;display:flex;gap:10px}
+.diff div{overflow-wrap:anywhere;background:rgba(255,255,255,.04);padding:9px 12px;border-radius:10px;font-size:13.5px;display:flex;gap:10px}
 .diff small{color:var(--g2);min-width:120px;font-weight:600}
 
 /* Responsive */
@@ -242,13 +246,15 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
   .inner{padding:28px 16px 120px}
   .kpis{grid-template-columns:1fr 1fr}.tiles{grid-template-columns:1fr 1fr}
   .media-f{grid-template-columns:1fr}
-  .sch{grid-template-columns:1fr 1fr}.sch .mini{grid-column:1/-1;justify-content:flex-end}
+  .sch{grid-template-columns:1fr 1fr}.sch select,.sch [data-f=l]{grid-column:1/-1}.sch .mini{grid-column:1/-1;justify-content:flex-end}
   .trk{grid-template-columns:44px 1fr}.trk>*:nth-child(n+3){grid-column:2}
   .week{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.day{padding:8px 4px;min-height:96px}.day small{font-size:9.5px;letter-spacing:0}.slot{font-size:11px;padding:6px 2px}.slot span{display:none}
   .top .btn span{display:none}.top .btn{padding:9px 12px}
+.usr{grid-template-columns:auto minmax(0,1fr)}.ua{grid-column:1/-1}
   .tb{opacity:1}.fh{flex-wrap:wrap}.fh .tag{display:none}.cd{display:grid;grid-template-columns:repeat(4,1fr)}.cd div{min-width:0;padding:10px 4px}.hero-c{padding:24px}
 }
-@media (max-width:480px){.tiles{grid-template-columns:1fr}.top{padding:0 10px;gap:8px}}
+@media (max-width:480px){.tiles{grid-template-columns:1fr}.top{padding:0 10px;gap:6px}.brand img{height:34px}}
+@media (max-width:360px){.state{display:none}.badge{font-size:10px;padding:2px 6px}}
 .scrim{position:fixed;inset:64px 0 0;z-index:5;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
 #app.sdo .scrim,#app.pvo .scrim{opacity:1;pointer-events:auto}
 @media (min-width:1181px){#app.pvo .scrim{opacity:0;pointer-events:none}}
@@ -264,7 +270,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 <!-- ===== Connexion ===== -->
 <section id="login" aria-label="Connexion">
   <div class="card">
-    <div class="mark"><span><b class="gt">S</b></span></div>
+    <img class="logo-l" src="media/logo-admin.png" alt="Sion Tabernacle Lubumbashi" width="180" height="140">
     <div id="lg-in">
       <h1>Espace <span class="gt">administration.</span></h1>
       <p class="sub">Sion Tabernacle Lubumbashi</p>
@@ -296,7 +302,7 @@ label.l{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;font-weig
 <div id="app" hidden>
   <header class="top">
     <button class="menu-b" id="menuB" aria-label="Menu"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-    <div class="brand"><div class="mark"><span><b class="gt">S</b></span></div>Sion <small>Admin</small></div>
+    <div class="brand"><img src="media/logo-admin.png" alt="Sion Tabernacle" width="52" height="40"><span class="badge">Admin</span></div>
     <div class="sp"></div>
     <div class="state" id="state"><i></i><span id="stateT">Tout est publié</span></div>
     <button class="btn ghost sm" id="undoAll" title="Annuler toutes les modifications non publiées" disabled><svg class="ic" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span>Annuler</span></button>
@@ -441,7 +447,7 @@ function logout(){ ssSet('sion_adm', null); location.reload(); }
 
 /* ================= Démarrage ================= */
 async function start(){
-  $('#login').style.transition = 'opacity .5s'; $('#login').style.opacity = 0; setTimeout(() => $('#login').remove(), 500);
+  $('#login').style.transition = 'opacity .5s'; $('#login').style.opacity = 0; setTimeout(() => { $('#login').remove(); $('.aurora').remove(); }, 500);
   $('#app').hidden = false; island('Chargement du site…', 'w', 0);
   try {
     const [html, pub] = await Promise.all([
@@ -452,6 +458,7 @@ async function start(){
     const dr = lsGet(DRAFT + '_edit'); D = dr ? JSON.parse(dr) : clone(PUB);
     island('Bienvenue, ' + USER.split(' ').pop(), 'ok', 2200);
   } catch(e) { island('Erreur de chargement : ' + e.message, 'e', 6000); }
+  if (lsGet('sion_adm_pv') === '0') $('#app').classList.add('nopv'); $('#pvB').classList.toggle('on', pvShown());
   side(); go(location.hash.slice(1) || 'dash'); setDev(lsGet('sion_adm_dev') || 'd'); reload();
 }
 
@@ -546,8 +553,8 @@ function go(r){
 }
 addEventListener('hashchange', () => { const r = location.hash.slice(1); if (r && r !== ROUTE) go(r); });
 $('#menuB').onclick = () => $('#app').classList.toggle('sdo');
-$('#pvB').onclick = () => $('#app').classList.toggle('pvo');
-$('#scrim').onclick = () => $('#app').classList.remove('sdo', 'pvo');
+$('#pvB').onclick = () => { if (innerWidth > 1180) { const h = $('#app').classList.toggle('nopv'); lsSet('sion_adm_pv', h ? '0' : '1'); } else $('#app').classList.toggle('pvo'); $('#pvB').classList.toggle('on', pvShown()); pvCheck(); };
+$('#scrim').onclick = () => { $('#app').classList.remove('sdo', 'pvo'); pvCheck(); };
 
 /* ================= Vues ================= */
 const head = (k, t, p, acts = '') => `<div class="ph"><p class="k">${k}</p><h2>${t}</h2>${p ? `<p>${p}</p>` : ''}${acts ? `<div class="acts">${acts}</div>` : ''}</div>`;
@@ -605,7 +612,7 @@ function textField(f){
 }
 function mediaField(f){
   const u = val(f), src = PEND[u]?.url || u, has = !!u;
-  const th = !has ? (f.kind === 'img' ? 'Aucune image' : 'Aucune vidéo') : f.kind === 'img' ? `<img alt="" src="${esc(src)}">` : (/youtu/.test(src) ? 'YouTube' : `<video src="${esc(src)}" muted loop playsinline autoplay></video>`);
+  const th = !has ? (f.kind === 'img' ? 'Aucune image' : 'Aucune vidéo') : f.kind === 'img' ? `<img alt="" src="${esc(src)}">` : (/youtu/.test(src) ? 'YouTube' : `<video src="${esc(src)}" muted playsinline preload="metadata"></video>`);
   return `<div class="fld${isMod(f) ? ' mod' : ''}" data-k="${f.k}" data-m><div class="fh"><span class="t">${f.kind === 'img' ? IC.img : IC.video} ${esc(f.label)}</span><span class="sp"></span><span class="tag">${esc(SEC[f.sec]?.[0] || f.sec)}</span></div>
     <div class="media-f"><div class="thumb${has ? ' has' : ''}">${th}</div><div class="mf-a">
       <div class="row"><button class="btn sm" data-c="up">${IC.upload} ${f.kind === 'img' ? 'Changer l\'image' : 'Téléverser une vidéo'}</button>${f.kind === 'vid' ? `<button class="btn ghost sm" data-c="url">${IC.link} Lien</button>` : ''}<button class="btn ghost sm" data-c="reset">${IC.reset}</button></div>
@@ -706,11 +713,11 @@ VIEWS.cal = v => {
        <button class="addrow" id="add">${IC.plus} Ajouter un culte</button></div>
        <p class="note" style="margin-top:18px">Pensez aussi à mettre à jour le texte d'introduction des horaires et la FAQ (« Aide ») si le nombre de cultes change.</p>`;
     $$('.row-i', v).forEach(r => { const x = S[r.dataset.i];
-      $$('[data-f]', r).forEach(i => i.onchange = () => { x[i.dataset.f] = i.dataset.f === 'd' ? +i.value : i.value; if (x.e <= x.s) island('L\'heure de fin doit suivre le début', 'e'); syncDraft(); draw(); });
-      $('[data-del]', r).onclick = () => { if (S.length < 2) return island('Gardez au moins un culte', 'e'); S.splice(r.dataset.i, 1); syncDraft(); draw(); }; });
-    $('#add', v).onclick = () => { S.push({d: 6, s: '16:30', e: '18:30', l: 'Culte'}); syncDraft(); draw(); };
+      $$('[data-f]', r).forEach(i => i.onchange = () => { x[i.dataset.f] = i.dataset.f === 'd' ? +i.value : i.value; if (x.e <= x.s) island('L\'heure de fin doit suivre le début', 'e'); syncDraft(); draw(); reloadSoon(); });
+      $('[data-del]', r).onclick = () => { if (S.length < 2) return island('Gardez au moins un culte', 'e'); S.splice(r.dataset.i, 1); syncDraft(); draw(); reloadSoon(); }; });
+    $('#add', v).onclick = () => { S.push({d: 6, s: '16:30', e: '18:30', l: 'Culte'}); syncDraft(); draw(); reloadSoon(); };
   };
-  draw(); syncDraft(); reloadSoon();
+  draw(); syncDraft(true);
 };
 
 /* --- Galerie --- */
@@ -723,7 +730,7 @@ VIEWS.photos = v => {
       `<div class="pg" id="pg">${P.map((p, i) => { const u = PEND[p.src]?.url || p.src; return `<div class="pc" data-i="${i}"><div class="thumb${u ? ' has' : ''}" data-up>${u ? `<img alt="" loading="lazy" src="${esc(u)}">` : IC.img}</div>
         <div class="b"><input class="f" value="${esc(p.t)}" placeholder="Légende"><div class="mini"><span style="display:flex"><button data-mv="-1" title="Avant">${IC.up}</button><button data-mv="1" title="Après">${IC.down}</button></span><button class="x" data-del title="Supprimer">${IC.x}</button></div></div></div>`; }).join('')}</div>`;
     $$('.pc', v).forEach(c => { const i = +c.dataset.i, p = P[i];
-      $('input', c).oninput = e => { p.t = e.target.value; syncDraft(true); reloadSoon(); };
+      $('input', c).oninput = e => { p.t = e.target.value; syncDraft(true); }; $('input', c).onchange = reloadSoon;
       $('[data-up]', c).onclick = () => pickFile('image/*', async file => { const s = await stage(file, 'img'); if (s) { p.src = s; syncDraft(); draw(); reloadSoon(); } });
       dropzone(c, async file => { const s = await stage(file, 'img'); if (s) { p.src = s; syncDraft(); draw(); reloadSoon(); } });
       $('[data-del]', c).onclick = () => { P.splice(i, 1); syncDraft(); draw(); reloadSoon(); };
@@ -748,7 +755,7 @@ VIEWS.tracks = v => {
         <div class="mini"><button data-mv="-1">${IC.up}</button><button data-mv="1">${IC.down}</button><button data-url title="Lien">${IC.link}</button><button class="x" data-del>${IC.x}</button></div></div>`).join('')}
         <button class="addrow" id="add">${IC.plus} Ajouter un titre</button></div>`;
     $$('.row-i', v).forEach(r => { const i = +r.dataset.i, x = T[i];
-      $$('[data-f]', r).forEach(n => n.oninput = () => { x[n.dataset.f] = n.value; syncDraft(true); reloadSoon(); });
+      $$('[data-f]', r).forEach(n => { n.oninput = () => { x[n.dataset.f] = n.value; syncDraft(true); }; n.onchange = reloadSoon; });
       $('[data-up]', r).onclick = () => pickFile('audio/*', async file => { const s = await stage(file, 'aud'); if (s) { x.src = s; if (!x.d) { const a = new Audio(PEND[s].url); a.onloadedmetadata = () => { x.d = Math.floor(a.duration / 60) + ':' + String(Math.round(a.duration % 60)).padStart(2, '0'); syncDraft(); draw(); }; } syncDraft(); draw(); reloadSoon(); } });
       $('[data-url]', r).onclick = () => { const u = prompt('Lien direct du fichier audio :', x.src || ''); if (u != null) { x.src = u.trim(); syncDraft(); draw(); reloadSoon(); } };
       $('[data-del]', r).onclick = () => { T.splice(i, 1); syncDraft(); draw(); reloadSoon(); };
@@ -781,19 +788,24 @@ VIEWS.settings = v => {
 VIEWS.users = v => {
   const U = AUTHF.users || [];
   v.innerHTML = head('Site', '<span class="gt">Administrateurs.</span>', 'Chaque administrateur a son propre nom et mot de passe. Le jeton GitHub reste chiffré dans le dépôt.') +
-    `<div class="list">${U.map(u => `<div class="row-i" style="grid-template-columns:auto 1fr auto"><div class="av">${esc(u.name[0])}</div><b style="font-weight:500">${esc(u.name)}${u.name === USER ? ' <small style="color:var(--muted)">(vous)</small>' : ''}</b>
-      <div class="mini">${u.name === USER ? `<button class="btn ghost sm" data-pw>Changer le mot de passe</button>` : `<button class="x" data-del="${esc(u.name)}" title="Retirer">${IC.x}</button>`}</div></div>`).join('')}
+    `<div class="list">${U.map((u, i) => `<div class="row-i usr" data-i="${i}"><div class="av">${esc(u.name[0])}</div><div class="un"><b>${esc(u.name)}</b>${u.name === USER ? '<small>Vous</small>' : '<small>Administrateur</small>'}</div>
+      <div class="ua"><button class="btn ghost sm" data-ed>Modifier</button><button class="btn danger sm" data-del ${U.length < 2 ? 'disabled title="Il faut au moins un administrateur"' : ''}>Supprimer</button></div></div>`).join('')}
       <button class="addrow" id="add">${IC.plus} Ajouter un administrateur</button></div>
-     <p class="note" style="margin-top:18px">Utilisez des mots de passe longs (12 caractères minimum). Pour révoquer complètement un accès, régénérez aussi le jeton GitHub.</p>`;
-  const save = async (users, msg) => { island('Enregistrement…', 'w', 0); const f = await getFile(AUTH); const nf = {v: 1, users}; await putFile(AUTH, b64u(JSON.stringify(nf, null, 1)), msg, f && f.sha); AUTHF = nf; island('Enregistré'); VIEWS.users(v); };
-  const form = (title, withName, cb) => modal(`<h3>${title}</h3><p>12 caractères minimum.</p><div class="stack">${withName ? '<div><label class="l">Nom</label><input class="f" id="mn" required></div>' : ''}<div><label class="l">Mot de passe</label><input class="f" id="mp" type="password" minlength="12" autocomplete="new-password"></div><div><label class="l">Confirmer</label><input class="f" id="mp2" type="password" autocomplete="new-password"></div><p class="err" id="me"></p></div>`,
-    'Enregistrer', async () => { const n = withName ? $('#mn').value.trim() : USER, p = $('#mp').value;
-      if (withName && (!n || U.some(u => u.name.toLowerCase() === n.toLowerCase()))) return $('#me').textContent = 'Nom vide ou déjà utilisé.', false;
+     <p class="note" style="margin-top:18px">Mots de passe de 12 caractères minimum. Pour révoquer complètement un accès, régénérez aussi le jeton GitHub.</p>`;
+  const save = async (users, msg) => { island('Enregistrement…', 'w', 0); const f = await getFile(AUTH); const nf = {v: 1, users}; await putFile(AUTH, b64u(JSON.stringify(nf, null, 1)), msg, f && f.sha); AUTHF = nf; island('Enregistré'); };
+  const form = (title, name, cb) => modal(`<h3>${title}</h3><p>${name != null ? 'Le nom sert à la connexion. ' : ''}Pour des raisons de sécurité, le mot de passe doit être (re)défini.</p><div class="stack"><div><label class="l">Nom</label><input class="f" id="mn" value="${esc(name || '')}" autocomplete="off"></div><div><label class="l">Mot de passe (12 caractères min.)</label><input class="f" id="mp" type="password" autocomplete="new-password"></div><div><label class="l">Confirmer</label><input class="f" id="mp2" type="password" autocomplete="new-password"></div><p class="err" id="me"></p></div>`,
+    'Enregistrer', async () => { const n = $('#mn').value.trim(), p = $('#mp').value;
+      if (!n) return $('#me').textContent = 'Le nom est obligatoire.', false;
+      if (U.some(u => u.name.toLowerCase() === n.toLowerCase() && u.name !== name)) return $('#me').textContent = 'Ce nom est déjà utilisé.', false;
       if (p.length < 12) return $('#me').textContent = 'Mot de passe trop court.', false; if (p !== $('#mp2').value) return $('#me').textContent = 'Les mots de passe diffèrent.', false;
-      try { await cb(n, p); } catch(e) { island(e.message, 'e', 5000); } });
-  $('#add', v).onclick = () => form('Nouvel administrateur', true, async (n, p) => save([...U, await seal(n, p, TOKEN)], 'Admin : ajout de ' + n));
-  const pw = $('[data-pw]', v); if (pw) pw.onclick = () => form('Changer mon mot de passe', false, async (n, p) => save([...U.filter(u => u.name !== USER), await seal(USER, p, TOKEN)], 'Admin : mot de passe modifié'));
-  $$('[data-del]', v).forEach(b => b.onclick = () => modal(`<h3>Retirer ${esc(b.dataset.del)} ?</h3><p>Cette personne ne pourra plus se connecter.</p>`, 'Retirer', () => save(U.filter(u => u.name !== b.dataset.del), 'Admin : retrait de ' + b.dataset.del), true));
+      try { await cb(n, p); VIEWS.users(v); } catch(e) { $('#me').textContent = e.message; return false; } });
+  $('#add', v).onclick = () => form('Nouvel administrateur', '', async (n, p) => save([...U, await seal(n, p, TOKEN)], 'Admin : ajout de ' + n));
+  $$('.usr', v).forEach(r => { const u = U[+r.dataset.i];
+    $('[data-ed]', r).onclick = () => form('Modifier ' + esc(u.name), u.name, async (n, p) => {
+      const nu = await seal(n, p, TOKEN); await save(U.map(x => x === u ? nu : x), 'Admin : modification de ' + n);
+      if (u.name === USER) { USER = n; ssSet('sion_adm', JSON.stringify({t: TOKEN, n})); side(); $$('.nav').forEach(b => b.classList.toggle('on', b.dataset.r === ROUTE)); } });
+    $('[data-del]', r).onclick = () => modal(`<h3>Supprimer ${esc(u.name)} ?</h3><p>${u.name === USER ? 'Vous serez déconnecté et ne pourrez plus vous connecter avec ce compte.' : 'Cette personne ne pourra plus se connecter.'}</p>`, 'Supprimer',
+      async () => { try { await save(U.filter(x => x !== u), 'Admin : suppression de ' + u.name); if (u.name === USER) return logout(); VIEWS.users(v); } catch(e) { island(e.message, 'e', 5000); return false; } }, true); });
 };
 
 /* ================= Modale ================= */
@@ -833,9 +845,14 @@ addEventListener('beforeunload', e => { if (Object.keys(PEND).length) { e.preven
 /* ================= Aperçu ================= */
 const ifr = $('#ifr');
 function post(m){ try { ifr.contentWindow.postMessage(m, '*'); } catch(e){} }
-function reload(){ syncDraft(true); ifr.src = 'index.html?preview&' + Date.now(); }
-let rlT; function reloadSoon(){ clearTimeout(rlT); rlT = setTimeout(reload, 900); }
-function openPv(){ if (innerWidth <= 1180) $('#app').classList.add('pvo'); }
+let pvStale = true;
+const pvShown = () => innerWidth > 1180 ? !$('#app').classList.contains('nopv') : $('#app').classList.contains('pvo');
+function reload(){ syncDraft(true); if (!pvShown() || document.hidden) { pvStale = true; return; } pvStale = false; ifr.src = 'index.html?preview&' + Date.now(); }
+function pvCheck(){ if (pvShown()) { if (pvStale) reload(); } else if (ifr.src && innerWidth <= 1180) { ifr.removeAttribute('src'); pvStale = true; } }
+document.addEventListener('visibilitychange', () => { if (!document.hidden && pvStale) reload(); });
+let rzT; addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(pvCheck, 300); });
+let rlT; function reloadSoon(){ clearTimeout(rlT); rlT = setTimeout(reload, 1200); }
+function openPv(){ if (innerWidth <= 1180) $('#app').classList.add('pvo'); else { $('#app').classList.remove('nopv'); lsSet('sion_adm_pv', '1'); } pvCheck(); }
 function setDev(d){ lsSet('sion_adm_dev', d); $('#frame').classList.toggle('mob', d === 'm'); $$('[data-dev]').forEach(b => b.classList.toggle('on', b.dataset.dev === d)); }
 $$('[data-dev]').forEach(b => b.onclick = () => setDev(b.dataset.dev));
 $('#reload').onclick = reload;
@@ -846,7 +863,7 @@ addEventListener('message', e => { if (e.source !== ifr.contentWindow || !e.data
 function focusKey(k){
   const f = FIELDS.find(x => x.k === k); if (!f) return;
   const r = f.kind === 't' ? f.sec : 'medias-img'; if (ROUTE !== r) go(r);
-  $('#app').classList.remove('pvo');
+  $('#app').classList.remove('pvo'); pvCheck();
   setTimeout(() => { const c = $(`.fld[data-k="${CSS.escape(k)}"]`); if (!c) return; c.scrollIntoView({block: 'center', behavior: 'smooth'}); c.classList.add('flash'); setTimeout(() => c.classList.remove('flash'), 1600); const ed = $('.ed', c); if (ed) ed.focus({preventScroll: true}); }, 80);
 }
 </script>
