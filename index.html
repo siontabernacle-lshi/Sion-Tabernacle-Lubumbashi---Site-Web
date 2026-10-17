@@ -365,6 +365,7 @@ body.locked{overflow:hidden}
 .hdots{position:absolute;left:0;right:0;bottom:17%;z-index:2;display:flex;gap:7px;justify-content:center}
 .hdots button{all:unset;cursor:pointer;width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.4);transition:width .3s}
 .hdots button.on{width:16px;background:#fff}
+.mhero.playing~.mrows{margin-top:0}.mhero .bg img.yt{top:-16.7%;bottom:auto;height:133.4%}.mhero::after{background:linear-gradient(90deg,rgba(0,0,0,.82),transparent 58%),linear-gradient(0deg,#000 2%,rgba(0,0,0,.6) 22%,transparent 50%)}.mhero.playing .bg{background:#000}
 .mhero.playing::after,.mhero.playing .info,.mhero.playing .hdots{display:none}
 #medias .env-bar{z-index:20}.mhero{isolation:isolate}.mrows{position:relative;z-index:3;margin-top:-9vh;padding-bottom:90px}
 .mrow{margin-bottom:34px}
@@ -875,7 +876,6 @@ body.locked{overflow:hidden}
       <div class="t"><div class="u"><b id="lcdh">00</b><span>Heures</span></div><i class="sep" aria-hidden="true">:</i><div class="u"><b id="lcdm">00</b><span>Minutes</span></div><i class="sep" aria-hidden="true">:</i><div class="u"><b id="lcds">00</b><span>Secondes</span></div></div>
     </div>
     <div class="lplayer media" id="lplayer"><div class="ph">Direct — à venir</div></div>
-    <p class="sub" style="margin-top:10px"><a href="https://www.youtube.com/@siontab-lshi/live" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Ouvrir le direct sur YouTube</a> · <a href="https://www.youtube.com/@siontab-lshi/streams" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Lives précédents</a></p>
     <div class="rqcta"><div><b>Une requête de prière ?</b><span>Elle sera présentée devant le Seigneur pendant le culte.</span></div><button class="btn" type="button" id="rqopen">Envoyer une requête</button></div>
     <h3 class="sm">Prochains directs</h3>
     <div class="lnext">
@@ -1027,26 +1027,30 @@ document.querySelectorAll('[data-to]').forEach(a => a.addEventListener('click', 
   setTimeout(() => document.getElementById(a.dataset.to).scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}), 350);
 }));
 // ===== Médias : vidéos YouTube importées automatiquement depuis la chaîne @siontab-lshi =====
-const YT_CH = 'UCtg-M0z2ueO4elhzKdb8pRw', YT_UP = 'UU' + YT_CH.slice(2), YT_LV = 'UULV' + YT_CH.slice(2);
+const YT_CH = 'UCtg-M0z2ueO4elhzKdb8pRw';
 const YT_EMB = 'https://www.youtube-nocookie.com/embed/';
-const ytFrame = src => '<iframe referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0" src="' + src + '"></iframe>';
-// Vidéos ajoutées à la main (optionnel) : {t, c, d:'AAAA-MM-JJ', yt:'ID YouTube' ou src:'fichier.mp4', img, desc}
-const VIDEOS = [];
+const ytFrame = src => '<iframe referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0" src="' + src + '"></iframe>';
+// Affiché tant que la chaîne n'a pas encore été chargée (même design qu'avant)
+let VIDEOS = [
+  {t:'1 an du Réveil de Sion', c:'Réveil', d:'2026-10-01', desc:''},
+  {t:'Prédication du dimanche', c:'Prédication', d:'2026-09-27', desc:''},
+  {t:'Chœur de Sion', c:'Louange', d:'2026-09-20', desc:''},
+  {t:'Culte du mercredi', c:'Culte', d:'2026-09-16', desc:''},
+  {t:'Le Message du temps de la fin', c:'Prédication', d:'2026-09-06', desc:''}
+];
 (() => {
   const hero = document.getElementById('mhero'), bg = document.getElementById('mbg'), hd = document.getElementById('hdots'), rows = document.getElementById('mrows');
   const fmt = (d,o) => new Date(d+'T12:00:00').toLocaleDateString('fr-FR',o);
-  const thumb = v => v.img || (v.yt ? 'https://i.ytimg.com/vi/' + v.yt + '/hqdefault.jpg' : '');
-  const cat = t => /live|direct|culte/i.test(t) ? 'Culte' : /chœur|choeur|chant|louange|adoration/i.test(t) ? 'Louange' : /prédication|message|sermon/i.test(t) ? 'Prédication' : 'Vidéo';
+  const thumb = v => v.yt ? 'https://i.ytimg.com/vi/' + v.yt + '/hqdefault.jpg' : (v.img || '');
+  const cat = t => /live|direct|culte|service/i.test(t) ? 'Culte' : /chœur|choeur|chorale|chant|louange|adoration/i.test(t) ? 'Louange' : /prédication|message|sermon|enseignement|âge|age de/i.test(t) ? 'Prédication' : 'Vidéo';
   let FEAT = 0, cur = 0, sw, auto;
   function arm(){ clearInterval(auto); if (FEAT < 2) return; auto = setInterval(() => { if (hero.closest('.env').classList.contains('is-open') && hero.offsetParent && !hero.classList.contains('playing') && !document.hidden) setHero((cur + 1) % FEAT, true); }, 7000); }
   function setHero(i, fade){
     clearTimeout(sw); arm();
     if (fade && !reduce){ hero.classList.add('sw'); sw = setTimeout(() => { setHero(i); requestAnimationFrame(() => hero.classList.remove('sw')); }, 700); return; }
-    cur = i; const v = VIDEOS[i]; hero.classList.remove('playing');
-    if (!v){ bg.innerHTML = ytFrame(YT_EMB + 'videoseries?list=' + YT_UP); hero.classList.add('playing');
-      document.getElementById('mt').textContent = 'Sion Tabernacle Lubumbashi'; document.getElementById('mc').textContent = 'Toutes les vidéos de la chaîne'; document.getElementById('md').textContent = ''; return; }
+    cur = i; const v = VIDEOS[i]; if (!v) return; hero.classList.remove('playing');
     const im = thumb(v);
-    bg.innerHTML = v.src ? '<video muted loop playsinline '+(im?'poster="'+im+'"':'')+' src="'+v.src+'"></video>' : im ? '<img alt="" src="'+im+'">' : '<div class="ph">Vidéo à venir</div>';
+    bg.innerHTML = v.src ? '<video muted loop playsinline '+(im?'poster="'+im+'"':'')+' src="'+v.src+'"></video>' : im ? '<img alt="" '+(v.yt?'class="yt" ':'')+'src="'+im+'">' : '<div class="ph">Vidéo à venir</div>';
     const el = bg.querySelector('video'); if (el && !reduce) el.play().catch(()=>{});
     document.getElementById('mt').textContent = v.t;
     document.getElementById('mc').textContent = v.c + ' · ' + fmt(v.d,{day:'numeric',month:'long',year:'numeric'});
@@ -1064,10 +1068,6 @@ const VIDEOS = [];
     VIDEOS.sort((a,b) => b.d.localeCompare(a.d));
     FEAT = Math.min(5, VIDEOS.length); hd.innerHTML = ''; rows.innerHTML = '';
     for (let i = 0; i < FEAT; i++){ const b = document.createElement('button'); b.setAttribute('aria-label','À la une ' + (i+1)); b.onclick = () => setHero(i, true); hd.appendChild(b); }
-    // Bibliothèque complète : lecteur playlist de TOUTES les vidéos de la chaîne (toujours à jour)
-    const all = document.createElement('section'); all.className = 'mrow';
-    all.innerHTML = '<h3>Toutes les vidéos de la chaîne</h3><div class="lplayer media" style="aspect-ratio:16/9;max-width:960px">' + ytFrame(YT_EMB + 'videoseries?list=' + YT_UP) + '</div>'
-      + '<p class="sub" style="margin-top:8px">Touchez l\'icône de liste dans le lecteur pour parcourir toutes les vidéos · <a href="https://www.youtube.com/@siontab-lshi/videos" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Ouvrir la chaîne</a></p>';
     const groups = {};
     VIDEOS.forEach((v,i) => (groups[v.d.slice(0,7)] ||= []).push(i));
     Object.keys(groups).sort().reverse().forEach(k => {
@@ -1076,27 +1076,26 @@ const VIDEOS = [];
       sec.innerHTML = '<h3>' + name[0].toUpperCase() + name.slice(1) + '</h3><div class="mline"></div>';
       groups[k].forEach(i => { const v = VIDEOS[i], c = document.createElement('button'); c.className = 'mcard'; const im = thumb(v);
         c.innerHTML = '<div class="th">' + (im ? '<img alt="" loading="lazy" src="'+im+'">' : '') + '</div><b></b><span></span>';
-        c.querySelector('b').textContent = v.t; c.querySelector('span').textContent = v.c + ' · ' + fmt(v.d,{day:'numeric',month:'short'});
-        c.onclick = () => { setHero(i); document.getElementById('mplay').click(); document.getElementById('medias').scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); };
+        c.querySelector('b').textContent = v.t; c.title = v.t; c.querySelector('span').textContent = v.c + ' · ' + fmt(v.d,{day:'numeric',month:'short'});
+        c.onclick = () => { setHero(i); if (v.yt) document.getElementById('mplay').click(); document.getElementById('medias').scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); };
         sec.lastChild.appendChild(c); });
       rows.appendChild(sec);
     });
-    rows.appendChild(all);
     setHero(0);
   }
+  // Dernière liste connue (affichage instantané, même hors connexion)
+  try { const c = JSON.parse(localStorage.getItem('sion_yt') || 'null'); if (c && c.length) VIDEOS = c; } catch(e){}
   render();
-  // Import automatique des dernières vidéos (flux RSS de la chaîne)
-  const RSS = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + YT_CH;
-  const add = list => { const seen = new Set(VIDEOS.map(v => v.yt)); let n = 0;
-    list.forEach(v => { if (v.yt && !seen.has(v.yt)){ VIDEOS.push(v); n++; } }); if (n) render(); };
-  fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS)).then(r => r.json()).then(j => {
-    if (j.status !== 'ok') throw 0;
-    add(j.items.map(x => { const id = (x.link.match(/v=([\w-]{11})/) || [])[1]; return {yt:id, t:x.title, c:cat(x.title), d:(x.pubDate||'').slice(0,10), desc:''}; }));
-  }).catch(() => fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(RSS)).then(r => r.text()).then(x => {
-    const d = new DOMParser().parseFromString(x, 'text/xml');
-    add([...d.getElementsByTagName('entry')].map(e => { const g = n => (e.getElementsByTagName(n)[0]||{}).textContent || '';
-      const t = g('title'); return {yt:g('yt:videoId'), t, c:cat(t), d:g('published').slice(0,10), desc:''}; }));
-  }).catch(() => {}));
+  // Import automatique depuis le flux RSS de la chaîne (plusieurs relais, au cas où l'un est en panne)
+  const RSS = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + YT_CH, E = encodeURIComponent(RSS);
+  const parse = x => { const d = new DOMParser().parseFromString(x, 'text/xml');
+    return [...d.getElementsByTagName('entry')].map(e => { const g = n => (e.getElementsByTagName(n)[0]||{}).textContent || '';
+      const t = g('title'); return {yt:g('yt:videoId'), t, c:cat(t), d:g('published').slice(0,10), desc:''}; }).filter(v => v.yt); };
+  const RELAIS = ['https://api.allorigins.win/raw?url=' + E, 'https://corsproxy.io/?url=' + E, 'https://api.codetabs.com/v1/proxy?quest=' + E];
+  (function tryNext(k){ if (k >= RELAIS.length) return;
+    fetch(RELAIS[k]).then(r => r.ok ? r.text() : Promise.reject()).then(x => { const list = parse(x); if (!list.length) throw 0;
+      VIDEOS = list; try { localStorage.setItem('sion_yt', JSON.stringify(list)); } catch(e){}
+      if (!hero.classList.contains('playing')) render(); }).catch(() => tryNext(k + 1)); })(0);
 })();
 
 
@@ -1419,7 +1418,7 @@ const TRACKS = [
   // Lives
   const st = document.getElementById('lstate'), sub = document.getElementById('lsub'), pl = document.getElementById('lplayer');
   let plOn = null; // en direct → flux live ; hors antenne → playlist des lives précédents
-  function plSet(on){ if (on === plOn) return; plOn = on; pl.innerHTML = ytFrame(on ? LIVE_SRC : YT_EMB + 'videoseries?list=' + YT_LV); }
+  function plSet(on){ if (on === plOn) return; plOn = on; pl.innerHTML = on ? ytFrame(LIVE_SRC) : '<div class="ph">Direct — à venir</div>'; }
   const cd = document.getElementById('lcd'), JOURS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'], z = n => String(n).padStart(2,'0');
   function nextCulte(){ // Lubumbashi = UTC+2, sans heure d'été
     const t = new Date(Date.now() + 2*3600e3), d = t.getUTCDay(), s = t.getUTCHours()*3600 + t.getUTCMinutes()*60 + t.getUTCSeconds();
