@@ -1063,7 +1063,7 @@ let VIDEOS = [
   }
   document.getElementById('mplay').onclick = () => {
     const v = VIDEOS[cur];
-    if (v && v.yt){ clearInterval(auto); hero.classList.add('playing'); bg.innerHTML = ytFrame(YT_EMB + v.yt + '?autoplay=1&rel=0&playsinline=1&enablejsapi=1'); window.DI && DI.trackYT(bg.querySelector('iframe'), v.t); return; }
+    if (v && v.yt){ clearInterval(auto); hero.classList.add('playing'); bg.innerHTML = ytFrame(YT_EMB + v.yt + '?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin)); window.DI && DI.trackYT(bg.querySelector('iframe'), v.t); return; }
     const el = bg.querySelector('video');
     if (!el) return window.DI && DI.toast('Vidéo bientôt disponible', 2500);
     hero.classList.add('playing'); el.controls = true; el.loop = false; el.muted = false; el.currentTime = 0; el.play().catch(()=>{}); window.DI && DI.track(el);
