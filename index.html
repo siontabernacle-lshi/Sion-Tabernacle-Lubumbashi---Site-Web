@@ -452,7 +452,7 @@ body.locked{overflow:hidden}
 .pl-art svg{width:24px;height:24px}
 .pl-meta{flex:1;min-width:0}
 .pl-meta b{display:block;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl-meta span{display:block;color:var(--muted);font-size:14px}
+.pl-meta span{display:block;color:var(--muted);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eq{display:flex;align-items:center;gap:2px;height:16px;flex:none}
 .pl-prog{display:flex;align-items:center;gap:10px;margin:14px 0 8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .pl-prog .bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
@@ -1155,7 +1155,7 @@ function show(m, html, ms){ clearTimeout(back);
   if (view === vEv && m !== mode){ const g = vEv.cloneNode(true); g.removeAttribute('id'); g.classList.add('ghost'); g.setAttribute('aria-hidden','true'); di.appendChild(g);
     vEv.style.transition = 'none'; vEv.classList.remove('on'); void vEv.offsetWidth; vEv.style.transition = ''; vEv.classList.add('on');
     requestAnimationFrame(() => g.classList.remove('on')); setTimeout(() => g.remove(), 160); }
-  mode = m; vEv.innerHTML = html; swap(vEv); if (ms) back = setTimeout(home, ms); }
+  mode = m; vEv.innerHTML = html; swap(vEv); if (ms) back = setTimeout(() => media && media.playing && m !== 'player' && !sim ? openPlayer() : home(), ms); }
 function home(){ clearTimeout(back); if (sim && mode && mode !== 'forms') return DI.forms(); sim = false; mode = ''; swap(vNav); }
 
 // Navigation
@@ -1267,7 +1267,11 @@ function setMedia(m, ms){ clearMedia(); media = m; di.classList.add('is-media');
 function syncMedia(){ if (!media) return; di.classList.toggle('is-paused', !media.playing); paint(); }
 const ytCmd = (f, args) => media && media.fr && media.fr.contentWindow && media.fr.contentWindow.postMessage(JSON.stringify({event:'command', func:f, args: args || ''}), '*');
 const ytListen = fr => fr.addEventListener('load', () => { let n = 0; const t = setInterval(() => { if (++n > 10 || !fr.isConnected) return clearInterval(t); fr.contentWindow.postMessage(JSON.stringify({event:'listening', id:1, channel:'widget'}), '*'); }, 500); });
-window.addEventListener('message', e => { if (!media || !media.fr || e.source !== media.fr.contentWindow) return; let d; try { d = JSON.parse(e.data); } catch(_) { return; }
+window.addEventListener('message', e => { let d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : null; } catch(_) { return; }
+  if (d && d.info && d.info.playerState === 1 && !(media && media.fr && e.source === media.fr.contentWindow)){
+    const fr = [...document.querySelectorAll('#mhero iframe')].find(f => f.contentWindow === e.source), mt = document.getElementById('mt');
+    if (fr) setMedia({kind:'video', fr, playing:true, title: (mt && mt.textContent) || 'Vidéo', sub:'Sion Tabernacle', cur: d.info.currentTime || 0, dur: d.info.duration || NaN}, 4000); }
+  if (!media || !media.fr || e.source !== media.fr.contentWindow || !d) return;
   const i = d && d.info; if (!i) return; if (i.currentTime != null) media.cur = i.currentTime; if (i.duration) media.dur = i.duration;
   if (i.playerState === 0){ clearMedia(); if (mode === 'player') home(); return; }
   if (i.playerState === 1 || i.playerState === 2){ const p = i.playerState === 1; if (p !== media.playing){ media.playing = p; syncMedia(); } } });
@@ -1282,7 +1286,7 @@ function paint(){ const p = vEv.querySelector('.e-player'); if (mode !== 'player
   p.querySelector('.bar i').style.width = (isFinite(d) && d ? c / d * 100 : 0) + '%'; }
 function openPlayer(ms){ if (!media) return; const lv = media.kind === 'live', esc = t => String(t).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   show('player', `<div class="e-player"><div class="pl-top"><span class="pl-art">${lv ? I.cam : media.kind === 'audio' ? I.note : I.film}</span>
-    <div class="pl-meta"><b>${esc(media.title)}</b><span>${esc(media.sub)}</span></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+    <div class="pl-meta"><b>${esc(media.title)}</b><span>${(() => { const k = lv ? 'Direct' : media.kind === 'audio' ? 'Musique' : 'Vidéo'; return esc(media.sub && media.sub !== k ? k + ' — ' + media.sub : k); })()}</span></div><span class="eq"><i></i><i></i><i></i><i></i></span></div>
     <div class="pl-prog${lv ? ' lv' : ''}"><span class="c">${lv ? 'EN DIRECT' : ''}</span><span class="bar"><i></i></span><span class="r"></span></div>
     <div class="pl-ctl">${lv ? '' : `<button data-act="pl-prev" aria-label="Précédent">${I.prev}</button>`}<button data-act="pl-toggle" aria-label="Lecture / pause"></button>${lv ? `<a href="#medias" data-act="pl-open">Ouvrir</a>` : `<button data-act="pl-next" aria-label="Suivant">${I.next}</button><a href="#medias" data-act="pl-go">Ouvrir</a>`}<button class="x" data-act="pl-close" aria-label="Arrêter">${I.x}</button></div></div>`, ms);
   paint(); }
