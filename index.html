@@ -357,7 +357,7 @@ body.locked{overflow:hidden}
 .mhero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.82),transparent 58%),linear-gradient(0deg,var(--bg),transparent 38%)}
 .mhero .info{position:absolute;left:max(22px,4vw);bottom:24%;z-index:2;max-width:min(480px,82%)}
 .mhero .bg,.mhero .info{transition:opacity .7s ease,transform .7s ease}.mhero.sw .bg{opacity:0}.mhero.sw .info{opacity:0;transform:translateY(10px)}
-.mhero h1{font-size:clamp(30px,5vw,62px);font-weight:800;line-height:.95;letter-spacing:-.02em;text-transform:uppercase;margin:0 0 12px}
+.mhero h1{overflow-wrap:break-word;font-size:clamp(30px,5vw,62px);font-weight:800;line-height:.95;letter-spacing:-.02em;text-transform:uppercase;margin:0 0 12px}
 .mhero .cat{font-weight:600;font-size:15px;margin:0 0 4px}
 .mhero .desc{margin:0 0 18px;font-size:15px;color:rgba(255,255,255,.85)}
 .mplay{all:unset;cursor:pointer;background:#fff;color:#000;font-weight:600;border-radius:12px;padding:12px 30px}
@@ -504,7 +504,7 @@ body.locked{overflow:hidden}
 .trow b{display:block;font-size:16px;font-weight:600}
 .trow span,.trow em{color:var(--muted);font-size:14px;font-style:normal}
 .trow.on b{color:#bf5af2}
-@media (max-width:700px){.mnav button{padding:7px 8px;font-size:12.5px}}
+@media (max-width:700px){.mnav button{padding:7px 8px;font-size:12.5px}#medias .env-bar{gap:8px}#medias .mnav{position:static;transform:none;margin-inline:auto;min-width:0}#medias .env-bar::after{content:"";flex:none;width:38px}}
 
 /* ---- Héros : vidéo d'introduction en arrière-plan ---- */
 .hero{position:relative;isolation:isolate;overflow:hidden;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-block:120px 40px}
@@ -1045,6 +1045,10 @@ let VIDEOS = [
   const cat = t => /live|direct|culte|service/i.test(t) ? 'Culte' : /chœur|choeur|chorale|chant|louange|adoration/i.test(t) ? 'Louange' : /prédication|message|sermon|enseignement|âge|age de/i.test(t) ? 'Prédication' : 'Vidéo';
   let FEAT = 0, cur = 0, sw, auto;
   function arm(){ clearInterval(auto); if (FEAT < 2) return; auto = setInterval(() => { if (hero.closest('.env').classList.contains('is-open') && hero.offsetParent && !hero.classList.contains('playing') && !document.hidden) setHero((cur + 1) % FEAT, true); }, 7000); }
+  function fitT(){ const h = document.getElementById('mt'); h.style.fontSize = ''; if (!h.clientWidth) return;
+    let z = parseFloat(getComputedStyle(h).fontSize);
+    while (z > 18 && (h.scrollWidth > h.clientWidth + 1 || h.scrollHeight > z * .95 * 3 + 4)){ z -= 2; h.style.fontSize = z + 'px'; } }
+  new ResizeObserver(fitT).observe(hero);
   function setHero(i, fade){
     clearTimeout(sw); arm();
     if (fade && !reduce){ hero.classList.add('sw'); sw = setTimeout(() => { setHero(i); requestAnimationFrame(() => hero.classList.remove('sw')); }, 700); return; }
@@ -1052,14 +1056,14 @@ let VIDEOS = [
     const im = thumb(v);
     bg.innerHTML = v.src ? '<video muted loop playsinline '+(im?'poster="'+im+'"':'')+' src="'+v.src+'"></video>' : im ? '<img alt="" '+(v.yt?'class="yt" ':'')+'src="'+im+'">' : '<div class="ph">Vidéo à venir</div>';
     const el = bg.querySelector('video'); if (el && !reduce) el.play().catch(()=>{});
-    document.getElementById('mt').textContent = v.t;
+    document.getElementById('mt').textContent = v.t; fitT();
     document.getElementById('mc').textContent = v.c + ' · ' + fmt(v.d,{day:'numeric',month:'long',year:'numeric'});
     document.getElementById('md').textContent = v.desc || '';
     [...hd.children].forEach((b,j) => b.classList.toggle('on', j === i));
   }
   document.getElementById('mplay').onclick = () => {
     const v = VIDEOS[cur];
-    if (v && v.yt){ clearInterval(auto); hero.classList.add('playing'); bg.innerHTML = ytFrame(YT_EMB + v.yt + '?autoplay=1&rel=0&playsinline=1'); return; }
+    if (v && v.yt){ clearInterval(auto); hero.classList.add('playing'); bg.innerHTML = ytFrame(YT_EMB + v.yt + '?autoplay=1&rel=0&playsinline=1&enablejsapi=1'); window.DI && DI.trackYT(bg.querySelector('iframe'), v.t); return; }
     const el = bg.querySelector('video');
     if (!el) return window.DI && DI.toast('Vidéo bientôt disponible', 2500);
     hero.classList.add('playing'); el.controls = true; el.loop = false; el.muted = false; el.currentTime = 0; el.play().catch(()=>{}); window.DI && DI.track(el);
@@ -1167,10 +1171,10 @@ vEv.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
   if (a === 'forms'){ e.stopPropagation(); DI.forms(); }
-  else if (a === 'pl-toggle'){ e.stopPropagation(); if (!media) return; if (media.el) media.el.paused ? media.el.play().catch(()=>{}) : media.el.pause(); else { media.playing = !media.playing; syncMedia(); } }
+  else if (a === 'pl-toggle'){ e.stopPropagation(); if (!media) return; if (media.el) media.el.paused ? media.el.play().catch(()=>{}) : media.el.pause(); else { media.playing = !media.playing; if (media.fr) ytCmd(media.playing ? 'playVideo' : 'pauseVideo'); syncMedia(); } }
   else if (a === 'pl-prev' || a === 'pl-next'){ e.stopPropagation(); if (!media) return; const d = a === 'pl-next' ? 1 : -1;
     if (media.simu) media.cur = 0; else if (media.kind === 'audio') window.trackStep && trackStep(d); else if (media.el) media.el.currentTime += d * 10; paint(); }
-  else if (a === 'pl-close'){ e.stopPropagation(); if (media && media.el) media.el.pause(); clearMedia(); home(); }
+  else if (a === 'pl-close'){ e.stopPropagation(); if (media && media.el) media.el.pause(); ytCmd('pauseVideo'); clearMedia(); home(); }
   else if (a === 'pl-open'){ home(); setTimeout(() => { const t = document.querySelector('#medias .mnav button[data-p="lives"]'); if (t) t.click(); }, 60); }
   else if (a === 'rem'){ e.stopPropagation(); toggleRem(); }
   if (b.dataset.act === 'unmute'){ muted = false; applySound(); DI.volume(vol); }
@@ -1239,7 +1243,7 @@ const DI = {
       ${b('video','#bf5af2',I.film,'Lecteur vidéo')}${b('plive','#ff453a',I.cam,'Lecteur live')}</div></div>`); },
   // 8. Lecteur : vidéo, live ou musique en lecture / en pause
   player: ms => openPlayer(ms),
-  track: el => trackEl(el),
+  track: el => trackEl(el), trackYT: (fr, t) => setMedia({kind:'video', fr, playing:true, title: t || 'Vidéo', sub:'Sion Tabernacle'}, 4000),
   unmute(){ muted = false; applySound(); },
   // 9. Rappel 1 h 30 avant le culte
   remind(r, h, ms = 9000){ const d = r >= 60 ? Math.floor(r/60) + ' h' + (r%60 ? ' ' + String(r%60).padStart(2,'0') : '') : r + ' min';
@@ -1260,7 +1264,8 @@ function clearMedia(simOnly){ if (simOnly && !(media && media.simu)) return; med
 function setMedia(m, ms){ clearMedia(); media = m; di.classList.add('is-media'); di.classList.toggle('is-paused', !m.playing);
   mT = setInterval(tick, 500); if (!mode || mode === 'player' || mode === 'forms') openPlayer(ms); }
 function syncMedia(){ if (!media) return; di.classList.toggle('is-paused', !media.playing); paint(); }
-function tick(){ if (!media) return; if (media.el && !media.el.isConnected){ clearMedia(); if (mode === 'player') home(); return; }
+const ytCmd = f => media && media.fr && media.fr.contentWindow && media.fr.contentWindow.postMessage(JSON.stringify({event:'command', func:f, args:''}), '*');
+function tick(){ if (!media) return; if ((media.el || media.fr) && !(media.el || media.fr).isConnected){ clearMedia(); if (mode === 'player') home(); return; }
   if (media.simu && media.playing && media.kind !== 'live') media.cur = (media.cur + .5) % media.dur; paint(); }
 function paint(){ const p = vEv.querySelector('.e-player'); if (mode !== 'player' || !p || !media) return;
   p.classList.toggle('paused', !media.playing);
